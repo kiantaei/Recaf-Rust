@@ -104,3 +104,44 @@ Open the project in an IDE or generate the build with gradle.
 **Without IDE**:
 1. Run `gradlew build`
     - Output will be located at: `recaf-ui/build/libs/recaf-ui-{VERSION}-all.jar`
+
+## Rust Components
+
+The Java core (`recaf-core`, `recaf-ui`) is untouched. New functionality is
+being added in Rust under [`rust/`](rust/), managed with Cargo and rendered
+with [GPUI](https://crates.io/crates/gpui) (the GPU-accelerated UI framework
+behind Zed):
+
+| Crate | Purpose |
+| --- | --- |
+| `recaf-classfile` | Dependency-free parser for JVM class files: constant pool (all 17 tag types), versions, access flags, interfaces, field/method summaries, and attributes, with strict error reporting |
+| `recaf-gpui` | Desktop class file inspector built with GPUI — renders the parsed constant pool, class metadata and member counts in a dark IDE-style layout |
+
+### Building the Rust workspace
+
+Prerequisites (Linux): a stable Rust toolchain via [rustup](https://rustup.rs),
+plus the system libraries GPUI links against:
+
+```sh
+sudo apt-get install libxkbcommon-dev libxkbcommon-x11-0 libwayland-dev \
+  wayland-protocols libfontconfig1-dev libfreetype-dev libvulkan-dev \
+  libx11-dev libxcursor-dev libxrandr-dev libxi-dev libxext-dev \
+  libxfixes-dev libxcb1-dev
+```
+
+```sh
+cd rust
+cargo build --release            # binary at target/release/recaf-rust
+cargo test --workspace           # parser + sample tests
+```
+
+Run the inspector:
+
+```sh
+./target/release/recaf-rust                    # embedded demo class file
+./target/release/recaf-rust path/Some.class    # any real .class file
+```
+
+CI: [.github/workflows/rust.yml](.github/workflows/rust.yml) builds the
+workspace and runs the tests on every push/PR touching `rust/`, uploading the
+`recaf-rust` binary as an artifact.

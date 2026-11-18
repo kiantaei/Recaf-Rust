@@ -1,0 +1,9 @@
+[package]
+name = "recaf-classfile"
+description = "Dependency-free parser for JVM class files, used by the Rust side of Recaf-Rust."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]

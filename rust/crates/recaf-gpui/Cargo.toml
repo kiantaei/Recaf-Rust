@@ -1,0 +1,15 @@
+[package]
+name = "recaf-gpui"
+description = "GPUI-based desktop front end for Recaf-Rust: renders JVM class files parsed by recaf-classfile."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "recaf-rust"
+path = "src/main.rs"
+
+[dependencies]
+recaf-classfile = { workspace = true }
+gpui = { workspace = true }
