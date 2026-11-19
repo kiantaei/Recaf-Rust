@@ -1,0 +1,31 @@
+[workspace]
+resolver = "2"
+members = ["crates/recaf-classfile", "crates/recaf-gpui"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/kiantaei/Recaf-Rust"
+
+[workspace.dependencies]
+recaf-classfile = { path = "crates/recaf-classfile" }
+gpui = "0.2.2"
+
+[profile.dev]
+# Debug info balloons debug artifacts into multiple GB across gpui's ~600
+# dependencies and slows CI down; tests do not need it.
+debug = 0
+
+[profile.release]
+opt-level = 2
+lto = "thin"
+
+[patch.crates-io]
+# xattr 0.2.3 (pulled in via gpui -> gpui_http_client -> zed-async-tar) does
+# not compile against current libc releases on Linux: libc removed the
+# BSD-only ENOATTR constant. This local fork maps ENOATTR to ENODATA (its
+# Linux equivalent) while keeping macOS unchanged.
+# Upstream: https://github.com/Stebalien/xattr
+xattr = { path = "patches/xattr" }
+
